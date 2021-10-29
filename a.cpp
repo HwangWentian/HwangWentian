@@ -1,55 +1,62 @@
 #include<bits/stdc++.h>
 using namespace std;
+
 int main(){
 	while(true){
-		int a, b, c, d, MAX;
+		int a, b, c, d;
 		cin >> a >> b >> c >> d;
 		switch(a > b){
-			case 0:
+			case 1:
 				switch(a > c){
-					case 0:
+					case 1:
 						switch(a > d){
-							case 0:
+							case 1:
 								cout << a;
 								break;
-							case 1:
+							case 0:
 								cout << d;
 								break;
 						}
-					case 1:
+						break;
+					case 0:
 						switch(c > d){
-							case 0:
+							case 1:
 								cout << c;
 								break;
-							case 1:
+							case 0:
 								cout << d;
 								break;
 						}
+						break;
 				}
 				break;
-			case 1:
+			case 0:
 				switch(b > c){
+                    case 1:
+                        switch (b > d) {
+                            case 1:
+                                cout << b;
+                                break;
+                            case 0:
+                                cout << d;
+                                break;
+                        }
+						break;
 					case 0:
-						switch(b > d){
-							case 0:
-								cout << b;
-								break;
-							case 1:
-								cout << d;
-								break;
-						}
-					case 1:
 						switch(c > d){
-							case 0:
+							case 1:
 								cout << c;
 								break;
-							case 1:
+							case 0:
 								cout << d;
 								break;
 						}
+						break;
 				}
 		}
+		cout << endl; 
 	}
 	return 0;
 }
+
 
