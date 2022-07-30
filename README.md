@@ -16,3 +16,5 @@ It can be seen that even without a good learning environment, we can still do so
 As for C++, I was forced to learn it. I participated in the NOI (*National Olympiad in Informatics*) team at my school. NOI's competition language did not have Python, so I had to learn C++ from scratch.
 
 However, C++ opened my eyes, and its lower-level logic really changed my way of thinking.
+
+It's an honor to join GitHub. Let's build from here, together.
