@@ -1,40 +1,43 @@
-from PIL import Image
+import cv2
+import numpy as np
+from os import getcwd
 from os.path import exists
 
 
-def readImage() -> Image:
+def readImage() -> np.ndarray:
     while True:
         path = input("文件路径：")
         if exists(path):
             break
         print("文件不存在")
-    return Image.open(path)
+    return cv2.imread(path, cv2.IMREAD_UNCHANGED)
 
 
-def imageToPixels(img: Image) -> list:
-    height = img.size[1]
+def imageToPixels(img: np.ndarray) -> list:
+    height = img.shape[0]
     pixels = []
-    img_ = img.load()
     for y in range(height):
-        for x in range(200):
-            pixels.append(img_[x, y])
+        for x in range(500):
+            pixels.append(img[y, x])
     return pixels
 
 
 def pixelsToText(pixels: list) -> bytes:
     text = b''
-    for r, g, b in pixels:
-        text += int.to_bytes(r, 1, "big")
-        text += int.to_bytes(g, 1, "big")
-        text += int.to_bytes(b, 1, "big")
-    return text.rstrip(b'\x00')
+    null_num = 0
+    for r, g, b, a in pixels:
+        text += int.to_bytes(int(r), 1, "big")
+        text += int.to_bytes(int(g), 1, "big")
+        text += int.to_bytes(int(b), 1, "big")
+        null_num += 255 - a
+    return text[:-null_num]
 
 
 def save(text: bytes):
     while True:
-        path = input("保存在：")
-        if not exists(path):
-            with open(path, "wb") as file:
+        path = input("保存文件的名称：")
+        if not exists(getcwd() + "\\" + path):
+            with open(getcwd() + "\\" + path, "wb") as file:
                 file.write(text)
                 print("保存成功")
             break
@@ -47,6 +50,6 @@ if __name__ == "__main__":
             img = readImage()
             pixels = imageToPixels(img)
             text = pixelsToText(pixels)
-            save(text)
-        except:    
+            save(text)  
+        except:            
             print("出现错误")

@@ -1,5 +1,6 @@
-from PIL import Image
-from math import ceil, floor
+import cv2
+import numpy as np
+from os import getcwd
 from os.path import exists
 
 
@@ -28,35 +29,35 @@ def readText() -> bytes:
 
 
 def textToPixels(text: bytes) -> list:
-    pixels = [text[3 * i: 3 * i + 3] for i in range(floor(len(text) / 3.0))]
+    pixels = [text[3 * i: 3 * i + 3] for i in range(len(text) // 3)]
     pixels_ = []
     for r, g, b in pixels:
-        pixels_.append((r, g, b))
+        pixels_.append((r, g, b, 255))
+        # 注：Alpha 通道的值代表这个像素有几个空值。如 a=1 时 b 应为空值
     rest_n = len(text) % 3
-    if rest_n:
-        if rest_n == 2:
-            pixels_.append((text[-2], text[-1], 0))
-        else:
-            pixels_.append((text[-1], 0, 0))
+    if rest_n == 2:
+        pixels_.append((text[-2], text[-1], 0, 254))
+    elif rest_n == 1:
+        pixels_.append((text[-1], 0, 0, 253))
     return pixels_
 
 
-def paint(pixes: list) -> Image:
-    height = ceil(len(pixes) / 200.0)
-    img = Image.new(mode="RGB", size=(200, height), color="#000000")
+def paint(pixels: list) -> np.ndarray:
+    height = len(pixels) // 500 + 1
+    img = np.array([[(0, 0, 0, 253)] * 500] * height)
     for y in range(height):
-        for x in range(200):
-            n = 200 * y + x
-            if n < len(pixes):
-                img.putpixel((x, y), pixes[n])
+        for x in range(500):
+            n = 500 * y + x
+            if n < len(pixels):
+                img[y][x] = pixels[n]
     return img
 
 
-def save(img: Image):
+def save(img: np.ndarray):
     while True:
-        path = input("保存在：")
-        if not exists(path):
-            img.save(path)
+        path = input("保存文件的名称：")
+        if not exists(getcwd() + "\\" + path + ".png"):
+            cv2.imwrite(getcwd() + "\\" + path + ".png", img)
             print("保存成功")
             break
         print("文件已存在")
@@ -64,10 +65,9 @@ def save(img: Image):
 
 if __name__ == "__main__":
     while True:
-        try:
-            text = readText()
-            pixels = textToPixels(text)
-            img = paint(pixels)
-            save(img)
-        except:
-            print("出现错误")
+        text = readText()
+        pixels = textToPixels(text)
+        img = paint(pixels)
+        save(img)
+
+        print("出现错误")
