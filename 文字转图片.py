@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from os import getcwd
 from os.path import exists
 
 
@@ -44,7 +43,7 @@ def textToPixels(text: bytes) -> list:
 
 def paint(pixels: list) -> np.ndarray:
     height = len(pixels) // 500 + 1
-    img = np.array([[(0, 0, 0, 253)] * 500] * height)
+    img = np.array([[(0, 0, 0, 252)] * 500] * height)
     for y in range(height):
         for x in range(500):
             n = 500 * y + x
@@ -56,8 +55,8 @@ def paint(pixels: list) -> np.ndarray:
 def save(img: np.ndarray):
     while True:
         path = input("保存文件的名称：")
-        if not exists(getcwd() + "\\" + path + ".png"):
-            cv2.imwrite(getcwd() + "\\" + path + ".png", img)
+        if not exists(path + ".png"):
+            cv2.imwrite(path + ".png", img)
             print("保存成功")
             break
         print("文件已存在")
@@ -65,9 +64,10 @@ def save(img: np.ndarray):
 
 if __name__ == "__main__":
     while True:
-        text = readText()
-        pixels = textToPixels(text)
-        img = paint(pixels)
-        save(img)
-
-        print("出现错误")
+        try:
+            text = readText()
+            pixels = textToPixels(text)
+            img = paint(pixels)
+            save(img)
+        except:
+            print("出现错误")

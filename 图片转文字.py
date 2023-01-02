@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from os import getcwd
 from os.path import exists
 
 
@@ -29,15 +28,15 @@ def pixelsToText(pixels: list) -> bytes:
         text += int.to_bytes(int(r), 1, "big")
         text += int.to_bytes(int(g), 1, "big")
         text += int.to_bytes(int(b), 1, "big")
-        null_num += 255 - a
+        null_num += 255 - int(a)
     return text[:-null_num]
 
 
 def save(text: bytes):
     while True:
         path = input("保存文件的名称：")
-        if not exists(getcwd() + "\\" + path):
-            with open(getcwd() + "\\" + path, "wb") as file:
+        if not exists(path):
+            with open(path, "wb") as file:
                 file.write(text)
                 print("保存成功")
             break
@@ -51,5 +50,5 @@ if __name__ == "__main__":
             pixels = imageToPixels(img)
             text = pixelsToText(pixels)
             save(text)  
-        except:            
+        except:        
             print("出现错误")
