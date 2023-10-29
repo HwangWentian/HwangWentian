@@ -1,1 +1,1 @@
-New to Python (also C++ and HTML)
+New to Python
